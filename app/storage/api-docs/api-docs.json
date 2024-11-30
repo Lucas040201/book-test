@@ -1,0 +1,255 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Book API",
+        "description": "Api for CSC Group testing",
+        "contact": {
+            "email": "lucas.mendes.dev@outlook.com.br"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost/api",
+            "description": "Developmente Server"
+        }
+    ],
+    "paths": {
+        "v1/book": {
+            "post": {
+                "summary": "Create a Book",
+                "operationId": "524dc32fd3793da905462075c8b17bbb",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateBookRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Succesfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/ShowBookResource"
+                                                },
+                                                "code": {
+                                                    "example": "201"
+                                                },
+                                                "method": {
+                                                    "example": "Post"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "v1/book/{bookId}": {
+            "get": {
+                "summary": "Retrieve a book",
+                "operationId": "6c9d2355731083561724e061180bddd0",
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "description": "Book Uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Founded Book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/ShowBookResource"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Book not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "example": "404"
+                                                },
+                                                "success": {
+                                                    "example": "false"
+                                                },
+                                                "error": {
+                                                    "example": "Resource Book not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateBookRequest": {
+                "title": "Book Resource",
+                "properties": {
+                    "title": {
+                        "description": "Book title",
+                        "type": "string",
+                        "example": "Clean Arch"
+                    },
+                    "description": {
+                        "description": "Book description",
+                        "type": "string",
+                        "example": "Book of Clean Arch"
+                    },
+                    "quantity": {
+                        "description": "Book Quantity",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "price": {
+                        "description": "Book price",
+                        "type": "integer",
+                        "example": "100"
+                    }
+                },
+                "type": "object"
+            },
+            "ShowAuthorResource": {
+                "title": "Author Resource",
+                "properties": {
+                    "id": {
+                        "description": "Author Uuid",
+                        "type": "string",
+                        "example": "7aa02c28-f2bd-387c-9c8c-b2069e0e6159"
+                    },
+                    "name": {
+                        "description": "Author Name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "biography": {
+                        "description": "Author Bio",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ShowBookResource": {
+                "title": "Book Resource",
+                "properties": {
+                    "id": {
+                        "description": "Book Uuid",
+                        "type": "string",
+                        "example": "7aa02c28-f2bd-387c-9c8c-b2069e0e6159"
+                    },
+                    "title": {
+                        "description": "Book title",
+                        "type": "string",
+                        "example": "Clean Arch"
+                    },
+                    "description": {
+                        "description": "Book description",
+                        "type": "string",
+                        "example": "Book of Clean Arch"
+                    },
+                    "quantity": {
+                        "description": "Book Quantity",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "price": {
+                        "description": "Book price",
+                        "type": "integer",
+                        "example": "100"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/ShowAuthorResource"
+                    }
+                },
+                "type": "object"
+            },
+            "DefaultResponse": {
+                "properties": {
+                    "success": {
+                        "description": "Indicates that the request was successful",
+                        "type": "boolean"
+                    },
+                    "request": {
+                        "description": "Requested Url",
+                        "type": "string",
+                        "example": "http://localhost/api/v1"
+                    },
+                    "method": {
+                        "description": "Requested Method",
+                        "type": "string",
+                        "example": "Get"
+                    },
+                    "code": {
+                        "description": "Status code",
+                        "type": "string",
+                        "example": "200"
+                    },
+                    "error": {
+                        "description": "Error Message",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "data": {
+                        "description": "Api data response",
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

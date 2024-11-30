@@ -1,5 +1,3 @@
 logs/nginx/*
 logs/php/*
 !logs/
-app/*
-!app/.gitkeep
