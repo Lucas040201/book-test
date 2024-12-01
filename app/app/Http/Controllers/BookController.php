@@ -303,8 +303,9 @@ class BookController extends Controller
      *           )
      *     )
      * )
-     * @param CreateBookRequest $request
-     * @param CreateBookUseCase $createBookUseCase
+     * @param UpdateBookRequest $request
+     * @param string $bookId
+     * @param UpdateBookUseCase $updateBookUseCase
      * @return JsonResponse
      */
     public function update(UpdateBookRequest $request, string $bookId, UpdateBookUseCase $updateBookUseCase): JsonResponse
