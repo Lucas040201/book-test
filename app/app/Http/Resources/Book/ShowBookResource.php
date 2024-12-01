@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Book;
 
+use App\Http\Resources\Author\ShowAuthorResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Annotations as OA;
@@ -58,13 +59,7 @@ class ShowBookResource extends JsonResource
     {
         $author = [];
         if(!empty($this->resource['author'])) {
-            $author = [
-                'id' => $this->resource['author']['uuid'],
-                'name' => $this->resource['author']['name'],
-                'biography' => $this->resource['author']['biography'],
-                'created_at' => (new \DateTime($this->resource['author']['created_at']))->format('Y-m-d H:i:s'),
-                'updated_at' => (new \DateTime($this->resource['author']['updated_at']))->format('Y-m-d H:i:s'),
-            ];
+            $author = (new ShowAuthorResource($this->resource['author']))->toArray($request);
         }
 
         return [

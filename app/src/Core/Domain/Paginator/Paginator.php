@@ -6,21 +6,16 @@ readonly class Paginator implements PaginatorInterface
 {
 
     public function __construct(
-        private int  $currentPage,
+        private int  $page,
         private int  $perPage,
-        private ?int $nextPage = null
+        private ?array $params = null
     )
     {
     }
 
-    function getNextPage()
-    {
-        return $this->nextPage;
-    }
-
     function getPreviousPage()
     {
-        return $this->currentPage - 1;
+        return $this->page - 1;
     }
 
     function getPageSize()
@@ -30,6 +25,11 @@ readonly class Paginator implements PaginatorInterface
 
     function getPage()
     {
-        return $this->currentPage;
+        return $this->page;
+    }
+
+    function getParams(): ?array
+    {
+        return $this->params;
     }
 }

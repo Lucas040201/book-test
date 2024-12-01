@@ -33,6 +33,12 @@ class ShowAuthorResource extends JsonResource
 {
     public function toArray(Request $request)
     {
-
+        return [
+            'id' => $this->resource['uuid'],
+            'name' => $this->resource['name'],
+            'biography' => $this->resource['biography'],
+            'created_at' => (new \DateTime($this->resource['created_at']))->format('Y-m-d H:i:s'),
+            'updated_at' => (new \DateTime($this->resource['updated_at']))->format('Y-m-d H:i:s'),
+        ];
     }
 }

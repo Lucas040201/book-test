@@ -20,6 +20,106 @@
     ],
     "paths": {
         "v1/book": {
+            "get": {
+                "summary": "Retrieves a book pagination",
+                "operationId": "a288eb04eeffd0abc792288e485b2dc3",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit of Book per page",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Book Sort",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pagination Result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "request": {
+                                                    "example": "http://localhost/api/v1/book?search=test&sort=desc&page=1&limit=10"
+                                                },
+                                                "data": {
+                                                    "$ref": "#/components/schemas/BookCollectionResource"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "example": "500"
+                                                },
+                                                "method": {
+                                                    "example": "GET"
+                                                },
+                                                "success": {
+                                                    "example": "false"
+                                                },
+                                                "error": {
+                                                    "example": "Internal Error"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "summary": "Create a Book",
                 "operationId": "524dc32fd3793da905462075c8b17bbb",
@@ -360,6 +460,34 @@
                     "biography": {
                         "description": "Author Bio",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ArrayOfBooks": {
+                "title": "Aray of Books",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ShowBookResource"
+                }
+            },
+            "BookCollectionResource": {
+                "title": "Book Resource",
+                "properties": {
+                    "count": {
+                        "description": "Page to retrieve",
+                        "type": "integer"
+                    },
+                    "currentPage": {
+                        "description": "Limit of Book per page",
+                        "type": "integer"
+                    },
+                    "lastPage": {
+                        "description": "Last Page",
+                        "type": "integer"
+                    },
+                    "items": {
+                        "$ref": "#/components/schemas/ArrayOfBooks"
                     }
                 },
                 "type": "object"

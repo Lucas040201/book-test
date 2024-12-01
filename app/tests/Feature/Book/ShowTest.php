@@ -24,6 +24,15 @@ class ShowTest extends TestCase
                 'data'
             ]
         );
+        $response->assertJson([
+            'data' => [
+                'id' => $book->uuid,
+                'title' => $book->title,
+                'description' => $book->description,
+                'price' => $book->price,
+                'quantity' => $book->quantity,
+            ]
+        ], true);
     }
 
     public function testBookNotFound(): void

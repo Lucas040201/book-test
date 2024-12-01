@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Book\CreateBookRequest;
 use App\Http\Requests\Book\UpdateBookRequest;
+use App\Http\Resources\Book\BookCollectionResource;
 use App\Http\Resources\Book\ShowBookResource;
 use App\Http\Response\DefaultResponse;
+use Core\Domain\Paginator\Paginator;
 use Core\UseCases\Book\CreateBookUseCase;
 use Core\UseCases\Book\DeleteBookUseCase;
 use Core\UseCases\Book\DTO\CreateBookDTO;
 use Core\UseCases\Book\DTO\UpdateBookDTO;
+use Core\UseCases\Book\RetrieveBookUseCase;
 use Core\UseCases\Book\ShowBookUseCase;
 use Core\UseCases\Book\UpdateBookUseCase;
 use Illuminate\Http\JsonResponse;
@@ -260,9 +263,116 @@ class BookController extends Controller
         }
     }
 
-    public function index(Request $request): JsonResponse
+    /**
+     * @OA\Get(
+     *     path="v1/book",
+     *     summary="Retrieves a book pagination",
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *          name="limit",
+     *          in="query",
+     *          description="Limit of Book per page",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Parameter(
+     *           name="sort",
+     *           in="query",
+     *           description="Book Sort",
+     *           required=false,
+     *           @OA\Schema(type="string")
+     *       ),
+     *       @OA\Parameter(
+     *            name="search",
+     *            in="query",
+     *            description="Search string",
+     *            required=false,
+     *            @OA\Schema(type="string")
+     *        ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Pagination Result",
+     *          @OA\JsonContent(
+     *              allOf={
+     *                  @OA\Schema(ref="#/components/schemas/DefaultResponse"),
+     *                  @OA\Schema(
+     *                      @OA\Property(
+     *                          property="request",
+     *                          example="http://localhost/api/v1/book?search=test&sort=desc&page=1&limit=10"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="data",
+     *                          ref="#/components/schemas/BookCollectionResource"
+     *                      ),
+     *                  )
+     *              }
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Error",
+     *            @OA\JsonContent(
+     *                allOf={
+     *                    @OA\Schema(ref="#/components/schemas/DefaultResponse"),
+     *                    @OA\Schema(
+     *                        @OA\Property(
+     *                            property="code",
+     *                            example="500"
+     *                        ),
+     *                        @OA\Property(
+     *                            property="method",
+     *                            example="GET"
+     *                        ),
+     *                        @OA\Property(
+     *                             property="success",
+     *                             example="false"
+     *                         ),
+     *                        @OA\Property(
+     *                            property="error",
+     *                            example="Internal Error"
+     *                        )
+     *                    )
+     *                }
+     *            )
+     *      )
+     *  )
+     *
+     * @param string $bookId
+     * @param ShowBookUseCase $showBookUseCase
+     * @return JsonResponse
+     */
+    public function index(Request $request, RetrieveBookUseCase $retrieveBookUseCase): JsonResponse
     {
-        return response()->json(['test' => 'test']);
+        try {
+            $params = $request->query();
+            $paginator = new Paginator(
+                $params['page'] ?? 1,
+                $params['limit'] ?? 10,
+                [
+                    'query' => $params['search'] ?? '',
+                    'sort' => $params['sort'] ?? 'ASC',
+                ]
+            );
+            $response = $retrieveBookUseCase->handle($paginator);
+            return $this->response(
+                new DefaultResponse(
+                    new BookCollectionResource($response)
+                )
+            );
+        } catch (\Exception $e) {
+            return $this->response(new DefaultResponse(
+                success: false,
+                error: $e->getMessage(),
+                code: $e->getCode()
+            ));
+        }
+
     }
 
     /**
