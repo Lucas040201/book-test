@@ -15,7 +15,7 @@ class FindByTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bookEloquentRepository = new BookEloquentRepository();
+        $this->bookEloquentRepository =  app(BookEloquentRepository::class);
     }
 
     public function testFindBook(): void
