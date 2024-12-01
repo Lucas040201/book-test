@@ -30,7 +30,6 @@ class CreateBookUseCaseTest extends TestCase
 
     public function testShouldCreateBook(): void
     {
-
         $dto = new CreateBookDTO(
             'book title',
             'book description',

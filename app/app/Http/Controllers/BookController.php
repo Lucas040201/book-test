@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Book\CreateBookRequest;
+use App\Http\Requests\Book\UpdateBookRequest;
 use App\Http\Resources\Book\ShowBookResource;
 use App\Http\Response\DefaultResponse;
 use Core\UseCases\Book\CreateBookUseCase;
 use Core\UseCases\Book\DeleteBookUseCase;
 use Core\UseCases\Book\DTO\CreateBookDTO;
+use Core\UseCases\Book\DTO\UpdateBookDTO;
 use Core\UseCases\Book\ShowBookUseCase;
+use Core\UseCases\Book\UpdateBookUseCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -46,13 +49,40 @@ class BookController extends Controller
      *                      ),
      *                       @OA\Property(
      *                           property="method",
-     *                           example="Post"
+     *                           example="POST"
      *                       )
      *                  )
      *              }
      *           )
-     *     )
-     * )
+     *     ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Error",
+     *            @OA\JsonContent(
+     *                allOf={
+     *                    @OA\Schema(ref="#/components/schemas/DefaultResponse"),
+     *                    @OA\Schema(
+     *                        @OA\Property(
+     *                            property="code",
+     *                            example="500"
+     *                        ),
+     *                        @OA\Property(
+     *                            property="method",
+     *                            example="Delete"
+     *                        ),
+     *                        @OA\Property(
+     *                             property="success",
+     *                             example="false"
+     *                         ),
+     *                        @OA\Property(
+     *                            property="error",
+     *                            example="Internal Error"
+     *                        )
+     *                    )
+     *                }
+     *            )
+     *      )
+     *  )
      * @param CreateBookRequest $request
      * @param CreateBookUseCase $createBookUseCase
      * @return JsonResponse
@@ -235,8 +265,67 @@ class BookController extends Controller
         return response()->json(['test' => 'test']);
     }
 
-    public function update(Request $request): JsonResponse
+    /**
+     * @OA\Put(
+     *     path="v1/book/{bookId}",
+     *     summary="Update a Book",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(ref="#/components/schemas/UpdateBookRequest")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Created Succesfully",
+     *         @OA\JsonContent(
+     *              allOf={
+     *                  @OA\Schema(ref="#/components/schemas/DefaultResponse"),
+     *                  @OA\Schema(
+     *                      @OA\Property(
+     *                           property="request",
+     *                           example="http://localhost/api/v1/book"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="data",
+     *                          ref="#/components/schemas/ShowBookResource"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="code",
+     *                          example="200"
+     *                      ),
+     *                       @OA\Property(
+     *                           property="method",
+     *                           example="PUT"
+     *                       )
+     *                  )
+     *              }
+     *           )
+     *     )
+     * )
+     * @param CreateBookRequest $request
+     * @param CreateBookUseCase $createBookUseCase
+     * @return JsonResponse
+     */
+    public function update(UpdateBookRequest $request, string $bookId, UpdateBookUseCase $updateBookUseCase): JsonResponse
     {
-        return response()->json(['test' => 'test']);
+        try {
+            $validated = $request->validated();
+            $validated['id'] = $bookId;
+            $dto = new UpdateBookDto(...$validated);
+            $response = $updateBookUseCase->handle($dto);
+            return $this->response(
+                new DefaultResponse(
+                    new ShowBookResource($response),
+                )
+            );
+        } catch (\Exception $e) {
+            return $this->response(new DefaultResponse(
+                success: false,
+                error: $e->getMessage(),
+                code: $e->getCode()
+            ));
+        }
     }
+
 }

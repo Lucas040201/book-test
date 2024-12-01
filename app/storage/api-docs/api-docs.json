@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Book API",
-        "description": "Api for CSC Group testing",
+        "description": "A test for CSC Group",
         "contact": {
             "email": "lucas.mendes.dev@outlook.com.br"
         },
@@ -54,7 +54,38 @@
                                                     "example": "201"
                                                 },
                                                 "method": {
-                                                    "example": "Post"
+                                                    "example": "POST"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "example": "500"
+                                                },
+                                                "method": {
+                                                    "example": "Delete"
+                                                },
+                                                "success": {
+                                                    "example": "false"
+                                                },
+                                                "error": {
+                                                    "example": "Internal Error"
                                                 }
                                             },
                                             "type": "object"
@@ -127,6 +158,52 @@
                                                 },
                                                 "error": {
                                                     "example": "Resource Book not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a Book",
+                "operationId": "5ada9b17bebdf670b28bfb0b20e471fb",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBookRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created Succesfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "request": {
+                                                    "example": "http://localhost/api/v1/book"
+                                                },
+                                                "data": {
+                                                    "$ref": "#/components/schemas/ShowBookResource"
+                                                },
+                                                "code": {
+                                                    "example": "200"
+                                                },
+                                                "method": {
+                                                    "example": "PUT"
                                                 }
                                             },
                                             "type": "object"
@@ -216,7 +293,33 @@
     "components": {
         "schemas": {
             "CreateBookRequest": {
-                "title": "Book Resource",
+                "title": "Create Book",
+                "properties": {
+                    "title": {
+                        "description": "Book title",
+                        "type": "string",
+                        "example": "Clean Arch"
+                    },
+                    "description": {
+                        "description": "Book description",
+                        "type": "string",
+                        "example": "Book of Clean Arch"
+                    },
+                    "quantity": {
+                        "description": "Book Quantity",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "price": {
+                        "description": "Book price",
+                        "type": "integer",
+                        "example": "100"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateBookRequest": {
+                "title": "Update Book",
                 "properties": {
                     "title": {
                         "description": "Book title",

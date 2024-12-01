@@ -16,6 +16,11 @@ abstract class BaseEloquentRepository implements BaseRepositoryInterface
 
     public function __construct()
     {
+        $this->refreshBuilder();
+    }
+
+    protected function refreshBuilder()
+    {
         $this->builder = $this->model->newQuery();
     }
 
@@ -42,14 +47,17 @@ abstract class BaseEloquentRepository implements BaseRepositoryInterface
         $this->model::where($needle, $value)->delete();
     }
 
-    public function update(string $needle, $value, array $data): bool
+    public function update(string $needle, $value, array $data): array
     {
-        return !!$this->model::where($needle, $value)->update($data);
+        $entity = $this->builder->firstWhere($needle, $value);
+        $entity->update($data);
+        $this->refreshBuilder();
+        return $entity->toArray();
     }
 
-    public function index(PaginatorInterface $pagination): LengthAwarePaginator
+    public function index(PaginatorInterface $paginator): LengthAwarePaginator
     {
-        return $this->model::paginate($pagination->getPageSize(), ['*'], 'page', $pagination->getPage());
+        return $this->model::paginate($paginator->getPageSize(), ['*'], 'page', $paginator->getPage());
     }
 
     /**

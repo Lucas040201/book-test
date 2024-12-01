@@ -9,7 +9,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Info(
  *         title="Book API",
  *         version="1.0.0",
- *         description="Api for CSC Group testing",
+ *         description="A test for CSC Group",
  *         @OA\Contact(
  *             email="lucas.mendes.dev@outlook.com.br"
  *         ),

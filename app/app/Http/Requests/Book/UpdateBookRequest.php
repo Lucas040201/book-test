@@ -7,8 +7,8 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     schema="CreateBookRequest",
- *     title="Create Book",
+ *     schema="UpdateBookRequest",
+ *     title="Update Book",
  *     @OA\Property(
  *          property="title",
  *          type="string",
@@ -35,7 +35,7 @@ use OpenApi\Annotations as OA;
  *       ),
  * )
  */
-class CreateBookRequest extends BaseRequest
+class UpdateBookRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
