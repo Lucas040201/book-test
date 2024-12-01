@@ -6,6 +6,7 @@ use App\Http\Requests\Book\CreateBookRequest;
 use App\Http\Resources\Book\ShowBookResource;
 use App\Http\Response\DefaultResponse;
 use Core\UseCases\Book\CreateBookUseCase;
+use Core\UseCases\Book\DeleteBookUseCase;
 use Core\UseCases\Book\DTO\CreateBookDTO;
 use Core\UseCases\Book\ShowBookUseCase;
 use Illuminate\Http\JsonResponse;
@@ -31,6 +32,10 @@ class BookController extends Controller
      *              allOf={
      *                  @OA\Schema(ref="#/components/schemas/DefaultResponse"),
      *                  @OA\Schema(
+     *                      @OA\Property(
+     *                           property="request",
+     *                           example="http://localhost/api/v1/book"
+     *                      ),
      *                      @OA\Property(
      *                          property="data",
      *                          ref="#/components/schemas/ShowBookResource"
@@ -92,6 +97,10 @@ class BookController extends Controller
      *                  @OA\Schema(ref="#/components/schemas/DefaultResponse"),
      *                  @OA\Schema(
      *                      @OA\Property(
+     *                          property="request",
+     *                          example="http://localhost/api/v1/book/7aa02c28-f2bd-387c-9c8c-b2069e0e6159"
+     *                      ),
+     *                      @OA\Property(
      *                          property="data",
      *                          ref="#/components/schemas/ShowBookResource"
      *                      ),
@@ -145,9 +154,80 @@ class BookController extends Controller
         }
     }
 
-    public function delete(Request $request): JsonResponse
+    /**
+     * @OA\Delete(
+     *     path="v1/book/{bookId}",
+     *     summary="Delete a book",
+     *     @OA\Parameter(
+     *         name="bookId",
+     *         in="path",
+     *         description="Book Uuid",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="DeletedBook",
+     *          @OA\JsonContent(
+     *              allOf={
+     *                  @OA\Schema(ref="#/components/schemas/DefaultResponse"),
+     *                  @OA\Schema(
+     *                      @OA\Property(
+     *                           property="request",
+     *                           example="http://localhost/api/v1/book/7aa02c28-f2bd-387c-9c8c-b2069e0e6159"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="method",
+     *                          example="Delete"
+     *                      )
+     *                  )
+     *              }
+     *          )
+     *      ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Error",
+     *           @OA\JsonContent(
+     *               allOf={
+     *                   @OA\Schema(ref="#/components/schemas/DefaultResponse"),
+     *                   @OA\Schema(
+     *                       @OA\Property(
+     *                           property="code",
+     *                           example="500"
+     *                       ),
+     *                       @OA\Property(
+     *                           property="method",
+     *                           example="Delete"
+     *                       ),
+     *                       @OA\Property(
+     *                            property="success",
+     *                            example="false"
+     *                        ),
+     *                       @OA\Property(
+     *                           property="error",
+     *                           example="Internal Error"
+     *                       )
+     *                   )
+     *               }
+     *           )
+     *     )
+     * )
+     * @param string $bookId
+     * @param DeleteBookUseCase $deleteBookUseCase
+     * @return JsonResponse
+     */
+    public function delete(string $bookId, DeleteBookUseCase $deleteBookUseCase): JsonResponse
     {
-        return response()->json(['test' => 'test']);
+        try {
+            $deleteBookUseCase->handle($bookId);
+            return $this->response(new DefaultResponse());
+        } catch (\Exception $e) {
+            return $this->response(new DefaultResponse(
+                success: false,
+                error: $e->getMessage(),
+                code: $e->getCode()
+            ));
+        }
     }
 
     public function index(Request $request): JsonResponse

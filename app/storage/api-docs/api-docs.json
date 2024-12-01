@@ -44,6 +44,9 @@
                                         },
                                         {
                                             "properties": {
+                                                "request": {
+                                                    "example": "http://localhost/api/v1/book"
+                                                },
                                                 "data": {
                                                     "$ref": "#/components/schemas/ShowBookResource"
                                                 },
@@ -91,6 +94,9 @@
                                         },
                                         {
                                             "properties": {
+                                                "request": {
+                                                    "example": "http://localhost/api/v1/book/7aa02c28-f2bd-387c-9c8c-b2069e0e6159"
+                                                },
                                                 "data": {
                                                     "$ref": "#/components/schemas/ShowBookResource"
                                                 }
@@ -121,6 +127,79 @@
                                                 },
                                                 "error": {
                                                     "example": "Resource Book not found"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a book",
+                "operationId": "b55ef4397e639aa089f8017de0fd1cd2",
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "description": "Book Uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "DeletedBook",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "request": {
+                                                    "example": "http://localhost/api/v1/book/7aa02c28-f2bd-387c-9c8c-b2069e0e6159"
+                                                },
+                                                "method": {
+                                                    "example": "Delete"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/DefaultResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "code": {
+                                                    "example": "500"
+                                                },
+                                                "method": {
+                                                    "example": "Delete"
+                                                },
+                                                "success": {
+                                                    "example": "false"
+                                                },
+                                                "error": {
+                                                    "example": "Internal Error"
                                                 }
                                             },
                                             "type": "object"

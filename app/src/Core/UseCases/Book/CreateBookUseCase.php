@@ -6,7 +6,6 @@ use Core\Domain\Entity\Book as Entity;
 use Core\Domain\Repository\BookRepositoryInterface;
 use Core\Domain\Services\AuthorService;
 use Core\Domain\ValueObject\Uuid;
-use Core\Integration\Author\AuthorIntegrationInterface;
 use Core\UseCases\Book\DTO\CreateBookDTO;
 
 class CreateBookUseCase
