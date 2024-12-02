@@ -23,17 +23,15 @@ class AuthorIntegration implements AuthorIntegrationInterface
 
         $bookInfo = $this->searchBook($bookTitle);
         $response = Http::get("$this->baseUrl/authors/$bookInfo->authorKey.json");
-
         $apiResponse = $response->json();
-
-        if(!key_exists('personal_name', $apiResponse) || !key_exists('bio', $apiResponse)) {
+        if(!key_exists('personal_name', $apiResponse)) {
             throw new AuthorNotFoundIntegrationException();
         }
 
-        if(is_array($apiResponse['bio'])) {
+        if(key_exists('bio', $apiResponse) && is_array($apiResponse['bio'])) {
             $authorBio = $apiResponse['bio']['value'];
         } else {
-            $authorBio = $apiResponse['bio'];
+            $authorBio = (key_exists('bio', $apiResponse))? $apiResponse['bio']: 'No biography';
         }
 
         return new AuthorDataDTO($apiResponse['personal_name'], $authorBio);
