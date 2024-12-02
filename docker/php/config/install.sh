@@ -12,7 +12,7 @@ separator() {
 install_dependencies() {
     separator 'Installing php extensions'
     apk update && apk add oniguruma-dev zlib-dev libpng-dev postgresql-dev libzip-dev
-    docker-php-ext-install mbstring exif pcntl bcmath gd pgsql pdo_pgsql zip
+    docker-php-ext-install mbstring exif pcntl bcmath gd pgsql pdo_pgsql zip intl
     apk update && apk upgrade
 }
 

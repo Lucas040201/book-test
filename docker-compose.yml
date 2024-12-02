@@ -43,32 +43,6 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - database
-  queue:
-    image: rabbitmq:3.12-management
-    hostname: queue
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 1024M
-    volumes:
-      - queue-vol:/var/lib/rabbitmq/mnesia/
-    environment:
-      RABBITMQ_DEFAULT_USER: app
-      RABBITMQ_DEFAULT_PASS: app
-    networks:
-      - backend
-  mailhog:
-    image: mailhog/mailhog
-    hostname: mailhog
-    ports:
-      - "8025:8025"
-    networks:
-      - backend
 
 networks:
   server:
@@ -82,4 +56,3 @@ networks:
 
 volumes:
   db-data:
-  queue-vol:
