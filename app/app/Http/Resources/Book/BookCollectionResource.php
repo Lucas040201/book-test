@@ -33,6 +33,11 @@ use OpenApi\Annotations as OA;
  *            type="integer"
  *        ),
  *        @OA\Property(
+ *             property="limit",
+ *             description="Books Per page",
+ *             type="integer"
+ *         ),
+ *        @OA\Property(
  *            property="items",
  *            ref="#/components/schemas/ArrayOfBooks"
  *        )
@@ -57,7 +62,8 @@ class BookCollectionResource extends JsonResource
             'count' => $paginator->total(),
             'currentPage' => $paginator->currentPage(),
             'lastPage' => $paginator->lastPage(),
-            'items' => $formatedItems
+            'limit' => $paginator->perPage(),
+            'items' => $formatedItems,
         ];
     }
 }
