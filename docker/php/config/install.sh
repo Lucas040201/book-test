@@ -27,6 +27,7 @@ install_composer() {
     php -r "unlink('composer-setup.php');"
     separator 'Move composer bin to /usr/local/bin/composer'
     mv composer.phar /usr/local/bin/composer
+    composer config process-timeout 50000000
 }
 
 install_dependencies
