@@ -486,6 +486,10 @@
                         "description": "Last Page",
                         "type": "integer"
                     },
+                    "limit": {
+                        "description": "Books Per page",
+                        "type": "integer"
+                    },
                     "items": {
                         "$ref": "#/components/schemas/ArrayOfBooks"
                     }
