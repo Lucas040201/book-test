@@ -4,6 +4,7 @@ namespace Core\UseCases\Book;
 
 use Core\Domain\Exception\ResourceNotFoundException;
 use Core\Domain\Repository\BookRepositoryInterface;
+use Core\Domain\ValueObject\Uuid;
 
 class ShowBookUseCase
 {
@@ -17,7 +18,8 @@ class ShowBookUseCase
 
     public function handle(string $bookId)
     {
-        $book = $this->bookRepository->findByWithRelation('uuid', $bookId, 'author');
+        $uuid = new Uuid($bookId);
+        $book = $this->bookRepository->findByWithRelation('uuid', $uuid, 'author');
 
         if (empty($book)) {
            throw new ResourceNotFoundException('Book');
