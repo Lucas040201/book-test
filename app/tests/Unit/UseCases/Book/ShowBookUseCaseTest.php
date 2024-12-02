@@ -5,6 +5,7 @@ namespace Tests\Unit\UseCases\Book;
 use App\Models\Book as BookModel;
 use Core\Domain\Exception\ResourceNotFoundException;
 use Core\Domain\Repository\BookRepositoryInterface;
+use Core\Domain\ValueObject\Uuid;
 use Core\UseCases\Book\ShowBookUseCase;
 use Tests\TestCase;
 
@@ -47,13 +48,14 @@ class ShowBookUseCaseTest extends TestCase
 
     public function testShouldThrowErrorWhenBookNotFound(): void
     {
+        $valueUuid = Uuid::create();
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Resource "Book" not found');
         $this->bookRepository
             ->expects($this->once())
             ->method('findByWithRelation')
             ->willReturn(null);
-        $this->showBookUseCase->handle('123123123');
+        $this->showBookUseCase->handle($valueUuid->uuid);
     }
 
 }
