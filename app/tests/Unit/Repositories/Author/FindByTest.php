@@ -1,6 +1,6 @@
 <?php
 
-namespace Repositories\Author;
+namespace Tests\Unit\Repositories\Author;
 
 use App\Models\Author as AuthorModel;
 use App\Repositories\Eloquent\AuthorEloquentRepository;
